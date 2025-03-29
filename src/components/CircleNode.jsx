@@ -40,8 +40,17 @@ import { Handle, Position } from "@xyflow/react";
 
 const handleStyle = { left: "50%", transform: "translateX(-50%)" };
 
-function CostumCircularNode({ isConnectable }) {
+function CostumCircularNode({ data, isConnectable }) {
+
   return (
+  <div
+    style={{
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center", 
+    }}  
+  >
+  
     <div
       className="circular-node"
       style={{
@@ -58,16 +67,28 @@ function CostumCircularNode({ isConnectable }) {
     >
       <Handle
         type="target"
-        position={Position.Top}
+        position={Position.Left}
         isConnectable={isConnectable}
       />
       <Handle
         type="source"
-        position={Position.Bottom}
+        position={Position.Right}
         id="b"
         isConnectable={isConnectable}
       />
     </div>
+
+    <span 
+      style={{ 
+        marginTop: "5px",
+        fontSize: "14px", 
+        color: "black" 
+      }}>
+
+      {data?.label || "Node (Null)"}
+    </span>
+
+  </div>
   );
 }
 
