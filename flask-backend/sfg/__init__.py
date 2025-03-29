@@ -1,2 +1,2 @@
-from sfg.marshaller import Marshaller
-from sfg.solver import SignalFlowGraphSolver
+from .marshaller import Marshaller
+from .solver import SignalFlowGraphSolver
