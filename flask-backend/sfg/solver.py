@@ -8,7 +8,7 @@ from sfg.classes import Edge, Path, ForwardPath
 
 
 class SignalFlowGraphSolver:
-    def __init__(self, edge_list: list[Edge], input_node: str, output_node: str) -> None:
+    def __init__(self, G: nx.MultiDiGraph, input_node: str, output_node: str) -> None:
         self.__input_node = input_node
         self.__output_node = output_node
         self.__forward_paths: list[ForwardPath] = []
@@ -16,8 +16,7 @@ class SignalFlowGraphSolver:
         self.__non_touching_loops: dict[int, list[list[Path]]] = {}
         self.__system_determinant: sp.Expr | None = None
         self.__transfer_function: sp.Expr | None = None
-        self.__G = nx.MultiDiGraph()
-        self.__G.add_edges_from([(u, v, {'key': k, 'gain': g}) for u, v, g, k in edge_list])
+        self.__G = G
 
     @staticmethod
     def __unique(l: list[list]) -> list[list]:
