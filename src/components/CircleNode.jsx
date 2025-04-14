@@ -35,60 +35,60 @@
 //   };
   
 //   export default CustomCircularNode;
-import { Handle, Position } from '@xyflow/react';
+  
+import { Handle, Position } from "@xyflow/react";
+
+const handleStyle = { left: "50%", transform: "translateX(-50%)" };
 
 function CostumCircularNode({ data, isConnectable }) {
+
   return (
-    <div style={{ position: 'relative', width: 60, height: 60 }}>
-      <div
-        style={{
-          width: '100%',
-          height: '100%',
-          borderRadius: '50%',
-          border: '2px solid black',
-          backgroundColor: 'transparent',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        {data.label}
-      </div>
-      
-      {/* Top right */}
-      <Handle
-        type="source"
-        position={Position.Right}
-        id="a"
-        style={{ top: '20%', background: 'green'  }}
-        isConnectable={isConnectable}
-      />
-      {/* Bottom right */}
-      <Handle
-        type="target"
-        position={Position.Right}
-        id="b"
-        style={{ top: '80%', background: 'red'  }}
-        isConnectable={isConnectable}
-      />
-      
-      {/* Top left */}
+  <div
+    style={{
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center", 
+    }}  
+  >
+  
+    <div
+      className="circular-node"
+      style={{
+        width: "60px",
+        height: "60px",
+        borderRadius: "50%",
+        border: "2px solid black",
+        backgroundColor: "transparent",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        position: "relative",
+      }}
+    >
       <Handle
         type="target"
         position={Position.Left}
-        id="a"
-        style={{ top: '20%', background: 'red' }}
         isConnectable={isConnectable}
       />
-      {/* Bottom left */}
       <Handle
         type="source"
-        position={Position.Left}
+        position={Position.Right}
         id="b"
-        style={{ top: '80%', background: 'green'  }}
         isConnectable={isConnectable}
       />
     </div>
+
+    <span 
+      style={{ 
+        marginTop: "5px",
+        fontSize: "14px", 
+        color: "black" 
+      }}>
+
+      {data?.label || "Node (Null)"}
+    </span>
+
+  </div>
   );
 }
 
