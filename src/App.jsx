@@ -17,11 +17,14 @@ import './App.css'
 import '@fontsource/inter';
 import { Typography } from "@mui/joy";
 import CustomCircularNode from './components/CircleNode';
+import CustomEdge from './components/DirectedEdge';
 import Button from '@mui/joy/Button';
 import ButtonGroup from '@mui/joy/ButtonGroup';
 import IconButton from '@mui/joy/IconButton';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { MarkerType } from '@xyflow/react';
+
 // import { 
 //   Add, 
 //   Delete 
@@ -31,16 +34,21 @@ import DeleteIcon from '@mui/icons-material/Delete';
 const flowKey = 'example-flow';
 
 const nodeTypes = {
-  custom: CustomCircularNode,
+  CustomNode: CustomCircularNode,
 };
+
+const edgeTypes = {
+  CustomEdge: CustomEdge,
+};
+
 const getNodeId = () => `randomnode_${+new Date()}`;
  
 const initialNodes = [
-  { id: '1', type: 'custom', data: { label: 'Node 1' }, position: { x: 0, y: -50 } },
-  { id: '2', type: 'custom', data: { label: 'Node 2' }, position: { x: 0, y: 50 } },
+  { id: '1', type: 'CustomNode', data: { label: 'Node 1' }, position: { x: 0, y: -50 } },
+  { id: '2', type: 'CustomNode', data: { label: 'Node 2' }, position: { x: 0, y: 50 } },
 ];
  
-const initialEdges = [{ id: 'e1-2', source: '1', target: '2' }];
+const initialEdges = [{ id: 'e1-2', source: '1', target: '2', }];
  
 const SaveRestore = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
@@ -51,11 +59,29 @@ const SaveRestore = () => {
   const [selectedElement, setSelectedElement] = useState(null);
   const [elementName, setElementName] = useState('');
   const [nodeCounter, setNodeCounter] = useState(0);
+  const [edgeCounter, setEdgeCounter] = useState(0);
+
  
   const onConnect = useCallback(
-    (params) => setEdges((eds) => addEdge(params, eds)),
-    [setEdges],
+    (params) => {
+      const newEdge = {
+        ...params,
+        id: `${params.source}-${params.target}-${Date.now()}`, 
+        type: 'CustomEdge',
+        data: { label: `Edge ${edgeCounter}` },
+        style: {
+          strokeWidth: 2,
+        },
+      };
+      setEdgeCounter((edgeCounter) => edgeCounter+1);
+      setEdges((eds) => addEdge(newEdge, eds));
+      
+    },
+
+    [setEdges, setEdgeCounter, edgeCounter]
   );
+  
+  
   const onSave = useCallback(() => {
     if (rfInstance) {
       const flow = rfInstance.toObject();
@@ -81,7 +107,8 @@ const SaveRestore = () => {
   const onAdd = useCallback(() => {
     const newNode = {
       id: getNodeId(),
-      type: 'custom',
+      // id: `Node ${nodeCounter}`,
+      type: 'CustomNode',
       data: { label: `Node ${nodeCounter}` },
       position: {
         x: (Math.random() - 0.5) * 400,
@@ -102,32 +129,56 @@ const SaveRestore = () => {
     console.log("Updated nodeCounter:", nodeCounter);
   }, [nodeCounter]);
   
+  // Edit edge/node weight/name
   useEffect(() => {
+    if (!selectedElement) return;
 
-    // Need to make an if-else (node or edge)
-    setNodes((nds) =>
-      nds.map((node) => {
-        if (node.id === selectedElement.id) {
-          return {
-            ...node,
-            data: {
-              ...node.data,
-              label: elementName || " ",
-            },
-          };
-        }
- 
-        return node;
-      }),
-    );
-  }, [elementName, setNodes]);
+    if ('source' in selectedElement && 'target' in selectedElement) {
+      // Edge
+      setEdges((eds) =>
+        eds.map((edge) =>{
+          if (edge.id === selectedElement.id) {
+            return {
+              ...edge, 
+              data: { 
+                ...edge.data, 
+                label: elementName || ' ' 
+              }
+            }
+          }
+            
+          return edge;
+        }),
+      );
+    } 
+    else {  // Node
+      setNodes((nds) =>
+        nds.map((node) => {
+          if (node.id === selectedElement.id) {
+            return {
+              ...node,
+              data: {
+                ...node.data,
+                label: elementName || " ",
+              },
+            };
+          }
+
+          return node;
+        }),
+      );
+    }
+  }, [elementName, selectedElement, setNodes, setEdges]);
  
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 return (
   <ReactFlow
     nodeTypes={nodeTypes}
+    edgeTypes={edgeTypes}
     nodes={nodes}
     edges={edges}
+    // nodes={initialNodes}
+    // edges={initialEdges}
     onNodesChange={onNodesChange}
     onEdgesChange={onEdgesChange}
     onConnect={onConnect}
@@ -161,7 +212,7 @@ return (
       >
 
         <h3 style={{color: "white", }}>
-          Edit Name
+          {selectedElement?.source ? 'Edit Weight' : 'Edit Name'}
         </h3>
 
         <input        
