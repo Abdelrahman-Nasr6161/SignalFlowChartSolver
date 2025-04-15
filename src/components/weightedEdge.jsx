@@ -4,7 +4,7 @@ import {
     getBezierPath,
   } from '@xyflow/react';
   import React from 'react';
-  import './WeightedEdge.css'
+  // import './WeightedEdge.css'
   
   function WeightedEdge(edgeData) {
     const{
