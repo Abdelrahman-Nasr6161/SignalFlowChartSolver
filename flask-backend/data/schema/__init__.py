@@ -1,1 +1,1 @@
-from .sgf import SignalFlowGraphSolverSchema
+from .sfg import SignalFlowGraphSolverSchema
