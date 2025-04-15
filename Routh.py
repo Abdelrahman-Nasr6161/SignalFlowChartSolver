@@ -91,7 +91,7 @@ def index():
     Jw_axis_coeffs = aux_poly_num 
     RHS_coeffs = sign_changes 
     LHS_coeffs = len(routh) - Jw_axis_coeffs - RHS_coeffs - 1
-    return flask.jsonify({'stable': stable, 'RHS_Coeffs': RHS_coeffs, 'LHS_Coeffs': LHS_coeffs, 'Jw_axis_Coeffs': Jw_axis_coeffs , 'routh': routh.tolist()})
+    return flask.jsonify({'stable': stable, 'RHS_roots': RHS_coeffs, 'LHS_roots': LHS_coeffs, 'Jw_axis_roots': Jw_axis_coeffs , 'routh': routh.tolist()})
 
 app.run(debug=True)
 polynomial = "s^3+5*s^2+7*s+34"
