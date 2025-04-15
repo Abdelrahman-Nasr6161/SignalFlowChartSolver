@@ -1,8 +1,10 @@
+from typing import Hashable
+
 from sympy import Expr
 
 
 class Edge:
-    def __init__(self, start: str, end: str, gain: Expr, key: int) -> None:
+    def __init__(self, start: str, end: str, gain: Expr, key: Hashable) -> None:
         self.start = start
         self.end = end
         self.gain = gain

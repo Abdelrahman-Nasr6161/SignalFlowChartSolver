@@ -110,12 +110,12 @@ class SignalFlowGraphSolver:
 
     def result(self) -> dict:
         return {
-            'forward_paths': self.__forward_paths.copy(),
-            'loops': self.__loops.copy(),
-            'non_touching_loops': self.__non_touching_loops.copy(),
-            'system_determinant': self.__system_determinant.copy(),
-            'determinant': [forward_path.determinant for forward_path in self.__forward_paths.copy()],
-            'transfer_function': self.__transfer_function.copy()
+            'forward_paths': self.__forward_paths,
+            'loops': self.__loops,
+            'non_touching_loops': self.__non_touching_loops,
+            'determinants': [self.__system_determinant] + [forward_path.determinant for forward_path in
+                                                           self.__forward_paths],
+            'transfer_function': self.__transfer_function
         }
 
     def solve(self) -> None:

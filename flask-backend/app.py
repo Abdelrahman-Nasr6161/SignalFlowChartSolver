@@ -1,7 +1,8 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 
-from sfg import SignalFlowGraphSolver, Marshaller
+from data import SignalFlowGraphSolverMarshaller
+from sfg import SignalFlowGraphSolver
 
 app = Flask(__name__)
 CORS(app)
@@ -15,9 +16,10 @@ def solve():
 
         data = request.get_json()
 
-        sfg_input = Marshaller.marshall_input(data)
+        sfg_input = SignalFlowGraphSolverMarshaller.marshall_input(data)
         sfg_solver = SignalFlowGraphSolver(**sfg_input)
-        output = Marshaller.marshall_output(sfg_solver.result())
+        sfg_solver.solve()
+        output = SignalFlowGraphSolverMarshaller.marshall_output(sfg_solver.result())
         return jsonify(output), 200
 
     except Exception as e:
