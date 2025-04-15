@@ -1,11 +1,16 @@
 import numpy as np
 import sympy as sp
-
+import sympy.parsing.sympy_parser as smp
 
 def routh_stability(polynomial):
     s = sp.Symbol('s')
-    polynomial = polynomial.replace('^', '**')  # Allow ^ as power
-    poly = sp.sympify(polynomial)
+    transformations: tuple = (
+        *smp.standard_transformations,
+        smp.split_symbols,
+        smp.implicit_multiplication,
+        smp.convert_xor
+    )
+    poly: sp.Expr = smp.parse_expr(polynomial, transformations=transformations)
     coeffs = sp.Poly(sp.expand(poly), s).all_coeffs()
     coeffs = [float(c) for c in coeffs]
     coeffs = np.array(coeffs)
