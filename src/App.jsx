@@ -9,6 +9,8 @@ import {
   addEdge,
   useReactFlow,
   Panel,
+  isNode,
+  isEdge,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import reactLogo from './assets/react.svg'
@@ -17,6 +19,7 @@ import './App.css'
 import '@fontsource/inter';
 import { Typography } from "@mui/joy";
 import CustomCircularNode from './components/CircleNode';
+import WeightedEdge from './components/weightedEdge'; // Import the custom edge component
 import Button from '@mui/joy/Button';
 import ButtonGroup from '@mui/joy/ButtonGroup';
 import IconButton from '@mui/joy/IconButton';
@@ -34,6 +37,10 @@ const nodeTypes = {
   custom: CustomCircularNode,
 };
 const getNodeId = () => `randomnode_${+new Date()}`;
+
+const edgeTypes = {
+  customEdge: WeightedEdge, 
+};
  
 const initialNodes = [
   { id: '1', type: 'custom', data: { label: 'Node 1' }, position: { x: 0, y: -50 } },
@@ -52,10 +59,16 @@ const SaveRestore = () => {
   const [elementName, setElementName] = useState('');
   const [nodeCounter, setNodeCounter] = useState(0);
  
-  const onConnect = useCallback(
-    (params) => setEdges((eds) => addEdge(params, eds)),
-    [setEdges],
-  );
+  const onConnect = (params) => {
+       const newEdge = {
+      ...params,
+      id: `e-${params.source}-->${params.target}`,
+      type: 'customEdge', 
+      data: { label: '1',},
+    };
+    setEdges((eds) => addEdge(newEdge, eds));
+  };
+
   const onSave = useCallback(() => {
     if (rfInstance) {
       const flow = rfInstance.toObject();
@@ -72,6 +85,7 @@ const SaveRestore = () => {
         setNodes(flow.nodes || []);
         setEdges(flow.edges || []);
         setViewport({ x, y, zoom });
+        setNodeCounter(flow.nodes.length);
       }
     };
  
@@ -93,6 +107,15 @@ const SaveRestore = () => {
     
   }, [setNodes, setNodeCounter, nodeCounter]);
 
+  const onDelete = (nodeId) => {
+    
+    setNodeCounter((nodeCounter) => Math.max(nodes.length - 1, 0));
+    console.log("Updated nodeCounter:", nodeCounter);
+    setNodes((nodes) => nodes.filter((n) => n.id !== nodeId));
+    setEdges((edges) => edges.filter((e) => e.source !== nodeId && e.target !== nodeId));
+  };
+
+
   const onElementClick = (event, elemet) => {
     console.log("Selected element: ", elemet);
     setSelectedElement(elemet);
@@ -103,29 +126,45 @@ const SaveRestore = () => {
   }, [nodeCounter]);
   
   useEffect(() => {
-
-    // Need to make an if-else (node or edge)
-    setNodes((nds) =>
-      nds.map((node) => {
-        if (node.id === selectedElement.id) {
-          return {
-            ...node,
-            data: {
-              ...node.data,
-              label: elementName || " ",
-            },
-          };
-        }
- 
-        return node;
-      }),
-    );
-  }, [elementName, setNodes]);
+    if (!selectedElement) return;
+  
+    if (isNode(selectedElement)) {
+      setNodes((nds) =>
+        nds.map((node) =>
+          node.id === selectedElement.id
+            ? {
+                ...node,
+                data: {
+                  ...node.data,
+                  label: elementName || " ",
+                },
+              }
+            : node
+        )
+      );
+    } else if (isEdge(selectedElement)) {
+      setEdges((eds) =>
+        eds.map((edge) =>
+          edge.id === selectedElement.id
+            ? {
+                ...edge,
+                data: {
+                  ...edge.data,
+                  label: elementName || " ",
+                },
+              }
+            : edge
+        )
+      );
+    }
+  }, [elementName, selectedElement, setNodes, setEdges]);
+  
  
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 return (
   <ReactFlow
     nodeTypes={nodeTypes}
+    edgeTypes={edgeTypes}
     nodes={nodes}
     edges={edges}
     onNodesChange={onNodesChange}
@@ -161,7 +200,7 @@ return (
       >
 
         <h3 style={{color: "white", }}>
-          Edit Name
+          {isNode(selectedElement) ? "Edit Node Name" : "Edit Edge Value"}
         </h3>
 
         <input        
@@ -192,7 +231,11 @@ return (
       <IconButton onClick={onAdd}>
         <AddIcon />
       </IconButton>
-      <IconButton>
+      <IconButton onClick={() => {
+    if (isNode(selectedElement)) {
+      onDelete(selectedElement.id);
+    }
+  }}>
         <DeleteIcon />
       </IconButton>
     </ButtonGroup>

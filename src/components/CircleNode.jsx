@@ -37,58 +37,64 @@
 //   export default CustomCircularNode;
   
 import { Handle, Position } from "@xyflow/react";
+import './CircleNode.css';
 
-const handleStyle = { left: "50%", transform: "translateX(-50%)" };
+// const handleStyle = { left: "50%", transform: "translateX(-50%)" };
 
 function CostumCircularNode({ data, isConnectable }) {
 
   return (
-  <div
-    style={{
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center", 
-    }}  
-  >
-  
+    <>
+  {/* // <div
+  //   style={{
+  //     display: "relative",
+  //     alignItems: "center", 
+  //   }}  
+  // > */}
     <div
       className="circular-node"
       style={{
         width: "60px",
         height: "60px",
         borderRadius: "50%",
-        border: "2px solid black",
+        border: "2px solid #ccc",
+        color: "#ccc",
         backgroundColor: "transparent",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        position: "relative",
+        // position: "relative",
       }}
     >
       <Handle
         type="target"
         position={Position.Left}
+        id="b"
         isConnectable={isConnectable}
+        style = {{background: "red", transform: "translateX(-60%)"}}
       />
+      {data?.label || "Node (Null)"}
       <Handle
         type="source"
         position={Position.Right}
-        id="b"
+        id="a"
         isConnectable={isConnectable}
+        style = {{background: "green", transform: "translateX(60%)"}}
       />
     </div>
 
-    <span 
+    {/* <span 
       style={{ 
         marginTop: "5px",
         fontSize: "14px", 
-        color: "black" 
+        color: "black"
       }}>
 
-      {data?.label || "Node (Null)"}
-    </span>
+      
+    </span> */}
 
-  </div>
+  {/* // </div> */}
+  </>
   );
 }
 
