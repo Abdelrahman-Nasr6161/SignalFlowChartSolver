@@ -1,9 +1,12 @@
 import numpy as np
 import sympy as sp
 import sympy.parsing.sympy_parser as smp
+import re
 def solve_polynomial(polynomial):
     s = sp.Symbol('s')
+    polynomial = re.sub(r'(\d+)(s)', r'\1*\2', polynomial)
     poly_expr = sp.sympify(polynomial.replace('^', '**'))
+    
     poly = sp.Poly(poly_expr, s)
     coeffs = [float(c) for c in poly.all_coeffs()]
     roots = np.roots(coeffs)
@@ -25,6 +28,8 @@ def solve_polynomial(polynomial):
         else:
             # Force real part to zero for display
             root_str = f"{imag}j" if imag != 0 else ""
+            if imag == 0:
+                root_str = f"{real}"
             zero_real.append(root_str)
 
     return positive_real, negative_real, zero_real
