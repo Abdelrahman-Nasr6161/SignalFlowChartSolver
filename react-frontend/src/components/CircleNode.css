@@ -1,0 +1,5 @@
+.react-flow__node  {
+    --xy-node-background-color-default: transparent !important;
+    --xy-node-z-index: -1 !important;
+    --xy-node-box-shadow: none !important;
+  }
