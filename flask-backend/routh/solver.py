@@ -81,6 +81,8 @@ def routh_array(coeffs):
             derived_coeffs = derived_coeffs[np.abs(derived_coeffs) != 0.0]
             while len(derived_coeffs) < cols:
                 derived_coeffs = np.append(derived_coeffs, 0)
+            print(derived_coeffs)
+            print(routh[i - 1])
             routh[i - 1] = derived_coeffs
 
         for j in range(cols - 1):
