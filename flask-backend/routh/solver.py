@@ -2,6 +2,35 @@ import numpy as np
 import sympy as sp
 import sympy.parsing.sympy_parser as smp
 
+def solve_polynomial(polynomial):
+    s = sp.Symbol('s')
+    poly_expr = sp.sympify(polynomial.replace('^', '**'))
+    poly = sp.Poly(poly_expr, s)
+    coeffs = [float(c) for c in poly.all_coeffs()]
+    roots = np.roots(coeffs)
+
+    positive_real = []
+    negative_real = []
+    zero_real = []
+
+    for r in roots:
+        real = round(r.real, 3)
+        imag = round(r.imag, 3)
+
+        if real > 1e-6:
+            root_str = f"{real}{'+' if imag >= 0 else ''}{imag}j" if imag != 0 else f"{real}"
+            positive_real.append(root_str)
+        elif real < -1e-6:
+            root_str = f"{real}{'+' if imag >= 0 else ''}{imag}j" if imag != 0 else f"{real}"
+            negative_real.append(root_str)
+        else:
+            # Force real part to zero for display
+            root_str = f"0{'+' if imag >= 0 else ''}{imag}j" if imag != 0 else "0"
+            zero_real.append(root_str)
+
+    return positive_real, negative_real, zero_real
+
+
 def routh_stability(polynomial):
     s = sp.Symbol('s')
     transformations: tuple = (

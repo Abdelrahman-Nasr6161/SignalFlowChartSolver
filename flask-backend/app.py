@@ -4,7 +4,7 @@ from flask_cors import CORS
 
 from data import SignalFlowGraphSolverMarshaller
 from sfg import SignalFlowGraphSolver
-from routh import routh_stability_analysis
+from routh import routh_stability_analysis ,solve_polynomial
 
 app = Flask(__name__)
 CORS(app)
@@ -30,19 +30,27 @@ def solve_sfg():
 
 @app.route('/routh', methods=['POST'])
 def solve_routh():
-    polynomial = request.json['polynomial']
+    polynomial = request.json['polynomial'].replace(" ", "")
     stable, sign_changes, routh, aux_poly_num = routh_stability_analysis(polynomial)
+    positive_real, negative_real, zero_real = solve_polynomial(polynomial)
     Jw_axis_coeffs = aux_poly_num
     RHS_coeffs = sign_changes
     LHS_coeffs = len(routh) - Jw_axis_coeffs - RHS_coeffs - 1
+    if Jw_axis_coeffs != 0:
+        stable = 'Marginally Stable'
+    else:
+        stable = 'Stable' if RHS_coeffs == 0 else 'Unstable'
     return jsonify(
         {
-            'stable': stable,
-            'RHS_roots': RHS_coeffs,
-            'LHS_roots': LHS_coeffs,
-            'Jw_axis_roots': Jw_axis_coeffs,
-            'routh': routh.tolist()
-         }
+        'LHS_roots': negative_real,
+        'RHS_roots': positive_real,
+        'zero_roots': zero_real,
+        'stable': stable,
+        'RHS_roots_num': RHS_coeffs,
+        'LHS_roots_num': LHS_coeffs,
+        'Jw_axis_roots_num': Jw_axis_coeffs,
+        'routh': routh.tolist()
+     }
     )
 
 

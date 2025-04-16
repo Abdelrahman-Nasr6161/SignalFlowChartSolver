@@ -9,7 +9,7 @@ function RouthForm() {
     const submitRouth = async (e) => {
         e.preventDefault();
         let data = { polynomial: polynomial };
-        const response = await fetch("http://127.0.0.1:5000/", {
+        const response = await fetch("http://127.0.0.1:5000/routh", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -79,9 +79,9 @@ function RouthForm() {
                             ))}
                         </tbody>
                     </Table>
-                    <h2>Number of roots in the right half-plane: {result.RHS_roots}</h2>
-                    <h2>Number of roots in the left half-plane: {result.LHS_roots}</h2>
-                    <h2>Number of roots on the imaginary axis: {result.Jw_axis_roots}</h2>
+                    <h2>Number of roots in the right half-plane: {result.RHS_roots_num}</h2>
+                    <h2>Number of roots in the left half-plane: {result.LHS_roots_num}</h2>
+                    <h2>Number of roots on the imaginary axis: {result.Jw_axis_roots_num}</h2>
                     <h2 style={{color: "#f6c177", fontFamily: "'IBM Plex Mono', monospace" }}>System Stability: {result.stable?"Stable":"Unstable"}</h2>
 
                 </div>
