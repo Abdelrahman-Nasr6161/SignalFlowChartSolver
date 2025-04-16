@@ -445,15 +445,6 @@ function FlowForm() {
               <IconButton onClick={onAdd}>
                 <AddIcon />
               </IconButton>
-              <IconButton
-                onClick={() => {
-                  if (isNode(selectedElement)) {
-                    onDelete(selectedElement.id);
-                  }
-                }}
-              >
-                <DeleteIcon />
-              </IconButton>
             </ButtonGroup>
           </Panel>
           

@@ -25,14 +25,14 @@ function CostumCircularNode({ data, isConnectable }) {
           position={Position.Top}
           id="top"
           isConnectable={isConnectable}
-          style={{ background: "red", transform: "translateY(-60%), translateX(60%)" }}
+          style={{ background: "green", transform: "translateY(-60%), translateX(60%)" }}
         />
         <Handle
           type="source"
           position={Position.Top}
           id="top"
           isConnectable={isConnectable}
-          style={{ background: "red", transform: "translateY(-60%), translateX(60%)" }}
+          style={{ background: "green", transform: "translateY(-60%), translateX(60%)" }}
         />
         <MathJax>{`\\(${data?.label || "Node (Null)"}\\)`}</MathJax>
 
@@ -57,14 +57,14 @@ function CostumCircularNode({ data, isConnectable }) {
           position={Position.Left}
           id="left"
           isConnectable={isConnectable}
-          style={{ background: "red", transform: "translateY(-60%), translateX(60%)" }}
+          style={{ background: "green", transform: "translateY(-60%), translateX(60%)" }}
         />
         <Handle
           type="source"
           position={Position.Left}
           id="left"
           isConnectable={isConnectable}
-          style={{ background: "red", transform: "translateY(-60%), translateX(60%)" }}
+          style={{ background: "green", transform: "translateY(-60%), translateX(60%)" }}
         />
 
         <Handle
