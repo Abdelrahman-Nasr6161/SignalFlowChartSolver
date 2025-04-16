@@ -3,14 +3,14 @@ import { Textarea, Button, Table } from "@mui/joy";
 
 function RouthForm() {
 
-    const [polynomial, setPolynomial] = useState();
+    const [polynomial, setPolynomial] = useState("");
     const [result, setResult] = useState(null);
 
     const submitRouth = async (e) => {
         e.preventDefault();
-        if (polynomial.length === 0) {
+        if (!polynomial || polynomial.length === 0) {
             alert("Please enter a polynomial.");
-            return
+            return;
         }
         let data = { polynomial: polynomial };
         const response = await fetch("http://127.0.0.1:5000/routh", {
@@ -47,15 +47,24 @@ function RouthForm() {
             fontFamily: "'IBM Plex Mono', monospace" 
           }}>
             <p>Enter the characteristic polynomial:</p>
-            <Textarea 
-                style={{ fontFamily: "'IBM Plex Mono', monospace"}} //
-                placeholder="e.g. s^2 + 5*s - 4" rows={8} columns={3}
-                value={polynomial}
-                onChange={(e) => setPolynomial(e.target.value)}
-                word-break="break-word"
-                whiteSpace="pre-wrap"
-                overflow-wrap="break-word"
-            />
+            <div>
+                <Textarea 
+                    style={{ 
+                        fontFamily: "'IBM Plex Mono', monospace",
+                    }}
+                    placeholder="e.g. s^2 + 5*s - 4" 
+                    rows={5} 
+                    columns={1}
+                    value={polynomial}
+                    onChange={(e) => setPolynomial(e.target.value)}
+                    sx={{
+                        wordBreak: "break-word",
+                        whiteSpace: "pre-wrap",
+                        overflowWrap: "break-word",
+                        resize: "none"
+                    }}
+                />
+            </div>
 
             <div style={{marginTop: "20px"}}>
                 <Button 

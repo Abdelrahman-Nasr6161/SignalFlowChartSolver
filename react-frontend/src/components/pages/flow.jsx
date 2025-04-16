@@ -292,12 +292,15 @@ function FlowForm() {
       display: "flex", 
       flexDirection: "column", 
       height: "100vh", 
-      transition: "all 0.3s ease" 
+      transition: "all 0.3s ease",
+      fontFamily: "'IBM Plex Mono', monospace"
     }}>
       <div className="flow-area" style={{ 
         flex: showSolution ? "1" : "1", 
         transition: "all 0.3s ease",
-        minHeight: showSolution ? "50%" : "100%"
+        minHeight: showSolution ? "50%" : "100%",
+        fontFamily: "'IBM Plex Mono', monospace"
+
       }}>
         <ReactFlow
           nodeTypes={nodeTypes}
@@ -313,7 +316,7 @@ function FlowForm() {
           onInit={setRfInstance}
           fitView
           fitViewOptions={{ padding: 2 }}
-          style={{ backgroundColor: "#191724", height: "100%" }}
+          style={{ backgroundColor: "#191724", height: "100%", fontFamily: "'IBM Plex Mono', monospace" }}
         >
           <Background />
 
@@ -331,13 +334,15 @@ function FlowForm() {
                 padding: "15px",
                 borderRadius: "8px",
                 boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+                fontFamily: "'IBM Plex Mono', monospace"
               }}
             >
               <div style={{ 
                 display: "flex", 
                 justifyContent: "space-between", 
                 alignItems: "center",
-                marginBottom: "10px"
+                marginBottom: "10px",
+                fontFamily: "'IBM Plex Mono', monospace"
               }}>
                 <h3 style={{ color: "white", margin: 0 }}>
                   {isNode(selectedElement) ? "Edit Node Name" : "Edit Edge Value"}
@@ -362,25 +367,26 @@ function FlowForm() {
                   borderRadius: "4px",
                   border: "none",
                   outline: "none",
-                  width: "100%"
+                  width: "90%",
+                  fontFamily: "'IBM Plex Mono', monospace"
                 }}
               />
             </div>
           )}
 
-          <Panel position="top-left" style={{ width: "220px" }}>
+          <Panel position="top-left" style={{ width: "220px", fontFamily: "'IBM Plex Mono', monospace" }}>
             <div style={{ 
               backgroundColor: "#2a273f", 
               padding: "15px", 
               borderRadius: "8px",
               boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
             }}>
-              <h3 style={{ margin: "0 0 10px 0", color: "white", fontSize: "14px" }}>
+              <h3 style={{ margin: "0 0 10px 0", color: "white", fontSize: "14px", fontFamily: "'IBM Plex Mono', monospace" }}>
                 Signal Flow Graph Settings
               </h3>
               
               <FormControl size="sm" sx={{ mb: 1 }}>
-                <FormLabel sx={{ color: "#e5c07b" }}>
+                <FormLabel sx={{ color: "#e5c07b", fontFamily: "'IBM Plex Mono', monospace" }}>
                   <InputIcon sx={{ fontSize: 14, mr: 0.5 }} />
                   Input Node
                 </FormLabel>
@@ -390,7 +396,8 @@ function FlowForm() {
                   sx={{ 
                     bgcolor: "#1f1d2e",
                     color: "white",
-                    '&:hover': { bgcolor: "#2d2b3d" }
+                    '&:hover': { bgcolor: "#2d2b3d" },
+                    fontFamily: "'IBM Plex Mono', monospace"
                   }}
                   placeholder="Select input node"
                   renderValue={(selected) => {
@@ -407,7 +414,7 @@ function FlowForm() {
               </FormControl>
               
               <FormControl size="sm">
-                <FormLabel sx={{ color: "#e06c75" }}>
+                <FormLabel sx={{ color: "#e5c07b", fontFamily: "'IBM Plex Mono', monospace" }}>
                   <OutputIcon sx={{ fontSize: 14, mr: 0.5 }} />
                   Output Node
                 </FormLabel>
@@ -417,113 +424,122 @@ function FlowForm() {
                   sx={{ 
                     bgcolor: "#1f1d2e",
                     color: "white",
-                    '&:hover': { bgcolor: "#2d2b3d" }
+                    '&:hover': { bgcolor: "#2d2b3d" },
+                    fontFamily: "'IBM Plex Mono', monospace"
                   }}
                   placeholder="Select output node"
                   renderValue={(selected) => {
                     return <MathJax>{`\\(${selected.label}\\)`}</MathJax>
-                  }}
-                >
-                  {nodes.map((node) => (
+                    }}
+                    >
+                    {nodes.map((node) => (
                     <Option key={node.id} value={node.id}>
                       <MathJax>{`\\(${node.data.label}\\)`}</MathJax>
                     </Option>
-                  ))}
-                </Select>
-              </FormControl>
-            </div>
-          </Panel>
+                    ))}
+                    </Select>
+                  </FormControl>
+                </div>
+                </Panel>
 
-          <Panel position="top-center">
-            <ButtonGroup
-              variant="soft"
-              sx={{
-                bgcolor: "#31748f",
-                "--ButtonGroup-radius": "20px",
-              }}
-            >
-              <IconButton onClick={onAdd}>
-                <AddIcon />
-              </IconButton>
-            </ButtonGroup>
-          </Panel>
-          
-          <Panel position="bottom-center">
-            <Button
-              variant="solid"
-              color="primary"
-              startDecorator={isLoading ? <CircularProgress size="sm" /> : <CalculateIcon />}
-              onClick={handleSolve}
-              disabled={isLoading || !canSolve}
-              sx={{
-                bgcolor: canSolve ? "#31748f" : "#555",
-                borderRadius: "20px",
-                mb: 2,
-              }}
-            >
-              {isLoading ? "Solving..." : "Solve"}
-            </Button>
-            
-            {nodes.length > 0 && (!inputNode || !outputNode) && (
-              <Alert
-                size="sm"
-                variant="soft"
-                color="warning"
-                sx={{
-                  position: "absolute",
-                  bottom: "60px",
-                  width: "300px",
-                  left: "50%",
-                  transform: "translateX(-50%)",
-                  fontSize: "12px",
-                  bgcolor: "rgba(229, 192, 123, 0.2)"
-                }}
-              >
-                Select both input and output nodes to solve graph
-              </Alert>
-            )}
-          </Panel>
-        </ReactFlow>
-      </div>
-      
-      {showSolution && (
-        <div 
-          ref={solutionPanelRef}
-          className="solution-area" 
-          style={{ 
-            flex: "1", 
-            backgroundColor: "#26233a", 
-            padding: "20px",
-            color: "white",
-            overflowY: "auto",
-            transition: "all 0.5s ease",
-            animation: "slideIn 0.5s ease",
-            position: "relative"
-          }}
-        >
-          <div style={{ 
-            display: "flex", 
-            justifyContent: "space-between", 
-            alignItems: "center",
-            marginBottom: "15px"
-          }}>
-            <h2 style={{ margin: 0 }}>Solution</h2>
-            <IconButton 
-              onClick={closeSolution}
-              sx={{ 
-                color: "white",
-                bgcolor: "rgba(255,255,255,0.1)",
-                "&:hover": {
-                  bgcolor: "rgba(255,255,255,0.2)"
-                }
-              }}
-            >
-              <CloseIcon />
-            </IconButton>
-          </div>
-          
-          {isLoading ? (
-            <div style={{ textAlign: "center", padding: "40px 0" }}>
+                <Panel position="bottom-left">
+                  <Button
+                    variant="solid"
+                    color="primary"
+                    onClick={onAdd}
+                    startDecorator={<AddIcon />}
+                    sx={{
+                      bgcolor: "#31748f",
+                      borderRadius: "20px",
+                      mb: 2,
+                      fontFamily: "'IBM Plex Mono', monospace"
+                    }}
+                  >
+                    Add node
+                  </Button>
+                </Panel>
+
+                <Panel position="bottom-center" style={{ fontFamily: "'IBM Plex Mono', monospace"}}>
+                  <Button
+                    variant="solid"
+                    color="primary"
+                    startDecorator={isLoading ? <CircularProgress size="sm" /> : <CalculateIcon />}
+                    onClick={handleSolve}
+                    disabled={isLoading || !canSolve}
+                    sx={{
+                      bgcolor: canSolve ? "#31748f" : "#555",
+                      borderRadius: "20px",
+                      mb: 2, 
+                      fontFamily: "'IBM Plex Mono', monospace"
+                    }}
+                  >
+                    {isLoading ? "Solving..." : "Solve"}
+                  </Button>
+
+                  {nodes.length > 0 && (!inputNode || !outputNode) && (
+                    <Alert
+                      size="sm"
+                      variant="soft"
+                      color="warning"
+                      sx={{
+                        position: "absolute",
+                        bottom: "60px",
+                        width: "300px",
+                        left: "50%",
+                        transform: "translateX(-50%)",
+                        fontSize: "12px",
+                        bgcolor: "#e06c75",
+                        fontFamily: "'IBM Plex Mono', monospace",
+                        color: "white"
+                      }}
+                    >
+                      Select both input and output nodes to solve graph
+                    </Alert>
+                  )}
+                </Panel>
+              </ReactFlow>
+              </div>
+              
+              {showSolution && (
+                <div 
+                  ref={solutionPanelRef}
+                  className="solution-area" 
+                  style={{ 
+                    flex: "1", 
+                    backgroundColor: "#26233a", 
+                    padding: "20px",
+                    color: "white",
+                    overflowY: "auto",
+                    transition: "all 0.5s ease",
+                    animation: "slideIn 0.5s ease",
+                    position: "relative",
+                    fontFamily: "'IBM Plex Mono', monospace"
+                  }}
+                >
+                  <div style={{ 
+                    display: "flex", 
+                    justifyContent: "space-between", 
+                    alignItems: "center",
+                    marginBottom: "15px",
+                    fontFamily: "'IBM Plex Mono', monospace"
+                  }}>
+                    <h2 style={{ margin: 0 }}>Solution</h2>
+                    <IconButton 
+                      onClick={closeSolution}
+                      sx={{ 
+                        color: "white",
+                        bgcolor: "rgba(255,255,255,0.1)",
+                        "&:hover": {
+                          bgcolor: "rgba(255,255,255,0.2)"
+                        }
+                      }}
+                    >
+                      <CloseIcon />
+                    </IconButton>
+                  </div>
+                  
+                  {isLoading ? (
+            <div style={{ textAlign: "center", padding: "40px 0", fontFamily: "'IBM Plex Mono', monospace" }}>
               <CircularProgress size="lg" />
               <p>Processing your signal flow graph...</p>
             </div>
@@ -532,19 +548,20 @@ function FlowForm() {
               padding: "15px", 
               backgroundColor: "rgba(255,87,87,0.1)", 
               borderRadius: "8px",
-              borderLeft: "4px solid #ff5757"
+              borderLeft: "4px solid #ff5757",
+              fontFamily: "'IBM Plex Mono', monospace"
             }}>
               <h3 style={{ color: "#ff5757" }}>Error</h3>
               <p>{error}</p>
               <p>Please check your graph structure and try again.</p>
             </div>
           ) : solution ? (
-            <div>
+            <div style={{ fontFamily: "'IBM Plex Mono', monospace"}}>
               {/* Display solution data with better formatting */}
-              <div className="solution-section">
+              <div className="solution-section" style={{ fontFamily: "'IBM Plex Mono', monospace"}}>
                 <h3>Graph Analysis</h3>
-                <div style={{ display: "flex", gap: "20px", flexWrap: "wrap" }}>
-                  <div className="solution-card">
+                <div style={{ display: "flex", gap: "20px", flexWrap: "wrap", fontFamily: "'IBM Plex Mono', monospace" }}>
+                  <div className="solution-card" sx={{ fontFamily: "'IBM Plex Mono', monospace"}}>
                     <h4>Input Node</h4>
                     <p>
                       <MathJax>
@@ -552,7 +569,7 @@ function FlowForm() {
                       </MathJax>
                     </p>
                   </div>
-                  <div className="solution-card">
+                  <div className="solution-card" style={{ fontFamily: "'IBM Plex Mono', monospace"}}>
                     <h4>Output Node</h4>
                     <p>
                       <MathJax>
@@ -563,7 +580,7 @@ function FlowForm() {
                 </div>
               </div>
 
-              <div className={"transfer-function"} style={{ marginBottom: "20px" }}>
+              <div className={"transfer-function"} style={{ marginBottom: "20px", fontFamily: "'IBM Plex Mono', monospace" }}>
                 <h3 style={{
                   borderBottom: "1px solid rgba(255,255,255,0.2)",
                   paddingBottom: "5px"
@@ -575,7 +592,7 @@ function FlowForm() {
                 </p>
               </div>
 
-              <div className={"determinants"} style={{ marginBottom: "20px" }}>
+              <div className={"determinants"} style={{ marginBottom: "20px", fontFamily: "'IBM Plex Mono', monospace" }}>
                 <h3 style={{
                   borderBottom: "1px solid rgba(255,255,255,0.2)",
                   paddingBottom: "5px"
@@ -593,7 +610,7 @@ function FlowForm() {
                 </p>
               </div>
 
-              <div className={"forward-paths"} style={{ marginBottom: "20px" }}>
+              <div className={"forward-paths"} style={{ marginBottom: "20px", fontFamily: "'IBM Plex Mono', monospace" }}>
                 <h3 style={{
                   borderBottom: "1px solid rgba(255,255,255,0.2)",
                   paddingBottom: "5px"
@@ -613,8 +630,7 @@ function FlowForm() {
                 </p>
               </div>
 
-
-              <div className={"loops"} style={{ marginBottom: "20px" }}>
+              <div className={"loops"} style={{ marginBottom: "20px", fontFamily: "'IBM Plex Mono', monospace" }}>
                 <h3 style={{
                   borderBottom: "1px solid rgba(255,255,255,0.2)",
                   paddingBottom: "5px"
@@ -624,7 +640,7 @@ function FlowForm() {
                 <p style={{ fontSize: "16px" }}>
                   {
                     solution.loops.map((loop, i) => {
-                      return <ul style={{display: 'flex', justifyContent: 'center'}}>
+                      return <ul style={{display: 'flex', justifyContent: 'center', fontFamily: "'IBM Plex Mono', monospace"}}>
                         <li key={i}>
                           <MathJax>{`\\(L_${i + 1}: ${loop.join("\\text{, }")}\\)`}</MathJax>
                         </li>
@@ -634,14 +650,14 @@ function FlowForm() {
                 </p>
               </div>
 
-              <div className={"non-touching-loops"} style={{ marginBottom: "20px" }}>
+              <div className={"non-touching-loops"} style={{ marginBottom: "20px", fontFamily: "'IBM Plex Mono', monospace" }}>
                 <h3 style={{
                   borderBottom: "1px solid rgba(255,255,255,0.2)",
                   paddingBottom: "5px"
                 }}>
                   Non Touching Loops
                 </h3>
-                <p style={{ fontSize: "18px" }}>
+                <p style={{ fontSize: "18px", fontFamily: "'IBM Plex Mono', monospace" }}>
                   {
                     Object.entries(solution.nonTouchingLoops).map(([k, k_non_touching_loops_combinations]) => {
                       return <ul>
@@ -668,6 +684,7 @@ function FlowForm() {
                   }
                 </p>
               </div>
+
             </div>
           ) : (
             <p>No solution data available. Please try solving again.</p>
@@ -693,11 +710,13 @@ function FlowForm() {
             margin: 0 0 5px 0;
             color: #c4a7e7;
             font-size: 14px;
+            fontFamily: 'IBM Plex Mono', monospace;
           }
           
           .solution-card p {
             margin: 0;
             font-size: 16px;
+            fontFamily: 'IBM Plex Mono', monospace;
           }
         `}
       </style>

@@ -25,14 +25,14 @@ function CostumCircularNode({ data, isConnectable }) {
           position={Position.Top}
           id="top"
           isConnectable={isConnectable}
-          style={{ background: "green", transform: "translateY(-60%), translateX(60%)" }}
+          style={{ background: "#e06c75", transform: "translateY(-60%), translateX(60%)" }}
         />
         <Handle
           type="source"
           position={Position.Top}
           id="top"
           isConnectable={isConnectable}
-          style={{ background: "green", transform: "translateY(-60%), translateX(60%)" }}
+          style={{ background: "#e06c75", transform: "translateY(-60%), translateX(60%)" }}
         />
         <MathJax>{`\\(${data?.label || "Node (Null)"}\\)`}</MathJax>
 
@@ -41,7 +41,7 @@ function CostumCircularNode({ data, isConnectable }) {
           position={Position.Bottom}
           id="bottom"
           isConnectable={isConnectable}
-          style={{ background: "green", transform: "translateY(-60%), translateX(60%)" }}
+          style={{ background: "#e06c75", transform: "translateY(-60%), translateX(60%)" }}
         />
 
         <Handle
@@ -49,7 +49,7 @@ function CostumCircularNode({ data, isConnectable }) {
           position={Position.Bottom}
           id="bottom"
           isConnectable={isConnectable}
-          style={{ background: "green", transform: "translateY(-60%), translateX(60%)" }}
+          style={{ background: "#e06c75", transform: "translateY(-60%), translateX(60%)" }}
         />
         
         <Handle
@@ -57,14 +57,14 @@ function CostumCircularNode({ data, isConnectable }) {
           position={Position.Left}
           id="left"
           isConnectable={isConnectable}
-          style={{ background: "green", transform: "translateY(-60%), translateX(60%)" }}
+          style={{ background: "#e06c75", transform: "translateY(-60%), translateX(60%)" }}
         />
         <Handle
           type="source"
           position={Position.Left}
           id="left"
           isConnectable={isConnectable}
-          style={{ background: "green", transform: "translateY(-60%), translateX(60%)" }}
+          style={{ background: "#e06c75", transform: "translateY(-60%), translateX(60%)" }}
         />
 
         <Handle
@@ -72,14 +72,14 @@ function CostumCircularNode({ data, isConnectable }) {
           position={Position.Right}
           id="right"
           isConnectable={isConnectable}
-          style={{ background: "green", transform: "translateY(-60%), translateX(60%)" }}
+          style={{ background: "#e06c75", transform: "translateY(-60%), translateX(60%)" }}
         />
         <Handle
           type="source"
           position={Position.Right}
           id="right"
           isConnectable={isConnectable}
-          style={{ background: "green", transform: "translateY(-60%), translateX(60%)" }}
+          style={{ background: "#e06c75", transform: "translateY(-60%), translateX(60%)" }}
         />
       </div>
   </>
