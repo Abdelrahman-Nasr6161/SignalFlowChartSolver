@@ -16,7 +16,7 @@ class SignalFlowGraphSolverMarshaller:
         G = nx.MultiDiGraph()
         G.add_edges_from([(e['source'], e['target'], {'key': e['id'], 'gain': sp.sympify(e['label'])}) for e in
                           validated_data['edges']])
-        G.add_nodes_from(validated_data['inputNode'])
+        G.add_node(validated_data['inputNode'])
         return {
             'G': G,
             'input_node': validated_data['inputNode'],
