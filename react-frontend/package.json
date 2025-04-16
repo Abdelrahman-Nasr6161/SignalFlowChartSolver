@@ -17,10 +17,13 @@
     "@mui/joy": "^5.0.0-beta.51",
     "@mui/material": "^6.4.7",
     "@xyflow/react": "^12.4.4",
+    "better-react-mathjax": "^2.3.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.5.0",
-    "reactflow": "^11.11.4"
+    "reactflow": "^11.11.4",
+    "signal-flow-app": "file:",
+    "uuid": "^11.1.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",

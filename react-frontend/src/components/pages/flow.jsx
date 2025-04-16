@@ -11,6 +11,7 @@ import {
   isNode,
   isEdge,
 } from "@xyflow/react";
+import {v4 as uuid4} from "uuid";
 import "@xyflow/react/dist/style.css";
 import "@fontsource/inter";
 import CustomCircularNode from "../CircleNode";
@@ -30,6 +31,7 @@ import InputIcon from "@mui/icons-material/Input";
 import OutputIcon from "@mui/icons-material/Output";
 import Alert from "@mui/joy/Alert";
 import CircularProgress from "@mui/joy/CircularProgress";
+import { MathJax } from "better-react-mathjax";
 
 function FlowForm() {
   const nodeTypes = {
@@ -44,12 +46,17 @@ function FlowForm() {
   const [rfInstance, setRfInstance] = useState(null);
   const [selectedElement, setSelectedElement] = useState(null);
   const [elementName, setElementName] = useState("");
-  const [nodeCounter, setNodeCounter] = useState(0);
+  const [nodeCounter, setNodeCounter] = useState(1);
   const [showSolution, setShowSolution] = useState(false);
   const [solution, setSolution] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  
+
+  const getNodeById = (id) => {
+    const node = nodes.find((node) => node.id === id)
+    return node
+  };
+
   // Input and output node selection
   const [inputNode, setInputNode] = useState(null);
   const [outputNode, setOutputNode] = useState(null);
@@ -58,12 +65,12 @@ function FlowForm() {
   const editPanelRef = useRef(null);
   const solutionPanelRef = useRef(null);
 
-  const getNodeId = () => `randomnode_${+new Date()}`;
+  const getNodeId = () => uuid4();
 
   const onConnect = (params) => {
     const newEdge = {
       ...params,
-      id: `e-${params.source}-->${params.target}`,
+      id: uuid4(),
       type: "customEdge",
       data: { label: "1" },
     };
@@ -74,7 +81,7 @@ function FlowForm() {
     const newNode = {
       id: getNodeId(),
       type: "custom",
-      data: { label: `Node ${nodeCounter}` },
+      data: { label: `x_${nodeCounter}` },
       position: {
         x: (Math.random() - 0.5) * 400,
         y: (Math.random() - 0.5) * 400,
@@ -85,7 +92,6 @@ function FlowForm() {
   }, [setNodes, setNodeCounter, nodeCounter]);
 
   const onDelete = (nodeId) => {
-    console.log(nodeId);
     // Reset input/output node selections if the deleted node was selected
     if (inputNode === nodeId) {
       setInputNode(null);
@@ -155,24 +161,21 @@ function FlowForm() {
     // Reset any previous errors
     setError(null);
     setIsLoading(true);
-    
+
+    // Format the data for the backend
+    // Converting the graph to a format that works with SignalFlowGraphSolverMarshaller
+    const graphData = {
+      edges: edges.map(edge => ({
+        id: edge.id,
+        source: getNodeById(edge.source).data.label,
+        target: getNodeById(edge.target).data.label,
+        label: edge.data.label
+      })),
+      inputNode: getNodeById(inputNode).data.label,
+      outputNode: getNodeById(outputNode).data.label
+    };
+
     try {
-      // Format the data for the backend
-      // Converting the graph to a format that works with SignalFlowGraphSolverMarshaller
-      const graphData = {
-        nodes: nodes.map(node => ({
-          id: node.id,
-          name: node.data.label || node.id
-        })),
-        edges: edges.map(edge => ({
-          source: edge.source,
-          target: edge.target,
-          weight: parseFloat(edge.data.label) || 1
-        })),
-        input_node: inputNode,
-        output_node: outputNode
-      };
-      
       console.log("Sending to backend:", graphData);
       
       // Make the API call to the backend
@@ -390,10 +393,14 @@ function FlowForm() {
                     '&:hover': { bgcolor: "#2d2b3d" }
                   }}
                   placeholder="Select input node"
+                  renderValue={(selected) => {
+                    console.log(selected.label)
+                    return <MathJax>{`\\(${selected.label}\\)`}</MathJax>
+                  }}
                 >
                   {nodes.map((node) => (
                     <Option key={node.id} value={node.id}>
-                      {node.data.label || node.id}
+                      <MathJax>{`\\(${node.data.label}\\)`}</MathJax>
                     </Option>
                   ))}
                 </Select>
@@ -413,10 +420,13 @@ function FlowForm() {
                     '&:hover': { bgcolor: "#2d2b3d" }
                   }}
                   placeholder="Select output node"
+                  renderValue={(selected) => {
+                    return <MathJax>{`\\(${selected.label}\\)`}</MathJax>
+                  }}
                 >
                   {nodes.map((node) => (
                     <Option key={node.id} value={node.id}>
-                      {node.data.label || node.id}
+                      <MathJax>{`\\(${node.data.label}\\)`}</MathJax>
                     </Option>
                   ))}
                 </Select>
@@ -545,41 +555,128 @@ function FlowForm() {
                 <div style={{ display: "flex", gap: "20px", flexWrap: "wrap" }}>
                   <div className="solution-card">
                     <h4>Input Node</h4>
-                    <p>{nodes.find(n => n.id === inputNode)?.data.label || inputNode}</p>
+                    <p>
+                      <MathJax>
+                        {`\\(${getNodeById(inputNode).data.label}\\)`}
+                      </MathJax>
+                    </p>
                   </div>
                   <div className="solution-card">
                     <h4>Output Node</h4>
-                    <p>{nodes.find(n => n.id === outputNode)?.data.label || outputNode}</p>
+                    <p>
+                      <MathJax>
+                        {`\\(${getNodeById(outputNode).data.label}\\)`}
+                      </MathJax>
+                    </p>
                   </div>
                 </div>
               </div>
-              
-              {/* Displaying the solution data */}
-              {Object.entries(solution).map(([key, value]) => (
-                <div key={key} className="solution-item" style={{ marginBottom: "20px" }}>
-                  <h3 style={{ 
-                    textTransform: "capitalize",
-                    borderBottom: "1px solid rgba(255,255,255,0.2)",
-                    paddingBottom: "5px" 
-                  }}>
-                    {key.replace(/_/g, " ")}
-                  </h3>
-                  
-                  {typeof value === "object" ? (
-                    <pre style={{ 
-                      backgroundColor: "rgba(0,0,0,0.2)", 
-                      padding: "12px", 
-                      borderRadius: "4px",
-                      overflowX: "auto",
-                      fontSize: "14px"
-                    }}>
-                      {JSON.stringify(value, null, 2)}
-                    </pre>
-                  ) : (
-                    <p style={{ fontSize: "16px" }}>{value}</p>
-                  )}
-                </div>
-              ))}
+
+              <div className={"transfer-function"} style={{ marginBottom: "20px" }}>
+                <h3 style={{
+                  borderBottom: "1px solid rgba(255,255,255,0.2)",
+                  paddingBottom: "5px"
+                }}>
+                  Transfer Function
+                </h3>
+                <p style={{ fontSize: "16px" }}>
+                  <MathJax>{`\\[${solution.transferFunction}\\]`}</MathJax>
+                </p>
+              </div>
+
+              <div className={"determinants"} style={{ marginBottom: "20px" }}>
+                <h3 style={{
+                  borderBottom: "1px solid rgba(255,255,255,0.2)",
+                  paddingBottom: "5px"
+                }}>
+                  Determinants
+                </h3>
+                <p style={{ fontSize: "16px" }}>
+                  {
+                    solution.determinants.map((delta, i) => {
+
+                      return i === 0? <MathJax>{`\\[\\Delta = ${delta}\\]`}</MathJax> :
+                                     <MathJax>{`\\[\\Delta_${i} = ${delta}\\]`}</MathJax>
+                    })
+                  }
+                </p>
+              </div>
+
+              <div className={"forward-paths"} style={{ marginBottom: "20px" }}>
+                <h3 style={{
+                  borderBottom: "1px solid rgba(255,255,255,0.2)",
+                  paddingBottom: "5px"
+                }}>
+                  Forward Paths
+                </h3>
+                <p style={{ fontSize: "16px" }}>
+                  {
+                    solution.forwardPaths.map((forwardPath, i) => {
+                      return <ul style={{display: 'flex', justifyContent: 'center'}}>
+                        <li key={i}>
+                          <MathJax>{`\\[P_${i + 1}: ${forwardPath.join("\\text{, }")}\\]`}</MathJax>
+                        </li>
+                      </ul>
+                    })
+                  }
+                </p>
+              </div>
+
+
+              <div className={"loops"} style={{ marginBottom: "20px" }}>
+                <h3 style={{
+                  borderBottom: "1px solid rgba(255,255,255,0.2)",
+                  paddingBottom: "5px"
+                }}>
+                  Loops
+                </h3>
+                <p style={{ fontSize: "16px" }}>
+                  {
+                    solution.loops.map((loop, i) => {
+                      return <ul style={{display: 'flex', justifyContent: 'center'}}>
+                        <li key={i}>
+                          <MathJax>{`\\(L_${i + 1}: ${loop.join("\\text{, }")}\\)`}</MathJax>
+                        </li>
+                      </ul>
+                    })
+                  }
+                </p>
+              </div>
+
+              <div className={"non-touching-loops"} style={{ marginBottom: "20px" }}>
+                <h3 style={{
+                  borderBottom: "1px solid rgba(255,255,255,0.2)",
+                  paddingBottom: "5px"
+                }}>
+                  Non Touching Loops
+                </h3>
+                <p style={{ fontSize: "18px" }}>
+                  {
+                    Object.entries(solution.nonTouchingLoops).map(([k, k_non_touching_loops_combinations]) => {
+                      return <ul>
+                        <li key={k}>
+                          {`Combinations of ${k} non-touching loops:`}
+                          <ul>
+                            {k_non_touching_loops_combinations.map((k_non_touching_loops_combination, i) => {
+                              return <li key={i}>
+                                <MathJax>
+                                  {
+                                    `\\(${
+                                        k_non_touching_loops_combination
+                                            .map(loop => `\\text{(}${loop.join('\\text{, }')})`)
+                                            .join('\\text{, }')
+                                    }\\)`
+                                  }
+                                </MathJax>
+                              </li>
+                            })}
+                          </ul>
+                        </li>
+                      </ul>
+                    })
+                  }
+                </p>
+              </div>
             </div>
           ) : (
             <p>No solution data available. Please try solving again.</p>
