@@ -37,25 +37,42 @@ function CostumCircularNode({ data, isConnectable }) {
         <MathJax>{`\\(${data?.label || "Node (Null)"}\\)`}</MathJax>
 
         <Handle
+          type="target"
+          position={Position.Bottom}
+          id="bottom"
+          isConnectable={isConnectable}
+          style={{ background: "green", transform: "translateY(-60%), translateX(60%)" }}
+        />
+
+        <Handle
           type="source"
           position={Position.Bottom}
           id="bottom"
           isConnectable={isConnectable}
           style={{ background: "green", transform: "translateY(-60%), translateX(60%)" }}
         />
+        
         <Handle
-          type="target"
-          position={Position.Bottom}
-          id="bottom"
-          isConnectable={isConnectable}
-          style={{ background: "green", transform: "translateY(-60%), translateX(60%)" }}
-        />
-                <Handle
           type="target"
           position={Position.Left}
           id="left"
           isConnectable={isConnectable}
           style={{ background: "red", transform: "translateY(-60%), translateX(60%)" }}
+        />
+        <Handle
+          type="source"
+          position={Position.Left}
+          id="left"
+          isConnectable={isConnectable}
+          style={{ background: "red", transform: "translateY(-60%), translateX(60%)" }}
+        />
+
+        <Handle
+          type="target"
+          position={Position.Right}
+          id="right"
+          isConnectable={isConnectable}
+          style={{ background: "green", transform: "translateY(-60%), translateX(60%)" }}
         />
         <Handle
           type="source"
