@@ -1,9 +1,21 @@
 import numpy as np
 import sympy as sp
 import sympy.parsing.sympy_parser as smp
+
+
+def parse_expr(expr) -> sp.Expr:
+    transformations: tuple = (
+        *smp.standard_transformations,
+        smp.split_symbols,
+        smp.implicit_multiplication,
+        smp.convert_xor
+    )
+    return smp.parse_expr(expr, transformations=transformations)
+
+
 def solve_polynomial(polynomial):
     s = sp.Symbol('s')
-    poly_expr = sp.sympify(polynomial.replace('^', '**'))
+    poly_expr = parse_expr(polynomial)
     poly = sp.Poly(poly_expr, s)
     coeffs = [float(c) for c in poly.all_coeffs()]
     roots = np.roots(coeffs)
@@ -32,13 +44,7 @@ def solve_polynomial(polynomial):
 
 def routh_stability(polynomial):
     s = sp.Symbol('s')
-    transformations: tuple = (
-        *smp.standard_transformations,
-        smp.split_symbols,
-        smp.implicit_multiplication,
-        smp.convert_xor
-    )
-    poly: sp.Expr = smp.parse_expr(polynomial, transformations=transformations)
+    poly = parse_expr(polynomial)
     coeffs = sp.Poly(sp.expand(poly), s).all_coeffs()
     coeffs = [float(c) for c in coeffs]
     coeffs = np.array(coeffs)
@@ -81,7 +87,7 @@ def routh_array(coeffs):
             while len(derived_coeffs) < cols:
                 derived_coeffs = np.append(derived_coeffs, 0)
             print(f"Derived coefficients: {derived_coeffs}")
-            print(f"Row {i} coefficients: {routh[i-1]}")
+            print(f"Row {i} coefficients: {routh[i - 1]}")
             routh[i - 1] = derived_coeffs
 
         for j in range(cols - 1):
