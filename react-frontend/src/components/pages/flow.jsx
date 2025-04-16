@@ -85,6 +85,7 @@ function FlowForm() {
   }, [setNodes, setNodeCounter, nodeCounter]);
 
   const onDelete = (nodeId) => {
+    console.log(nodeId);
     // Reset input/output node selections if the deleted node was selected
     if (inputNode === nodeId) {
       setInputNode(null);
