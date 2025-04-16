@@ -1,6 +1,6 @@
 import { Handle, Position } from "@xyflow/react";
 import './CircleNode.css';
-
+import { MathJax } from 'better-react-mathjax'
 function CostumCircularNode({ data, isConnectable }) {
 
   return (
@@ -34,7 +34,8 @@ function CostumCircularNode({ data, isConnectable }) {
           isConnectable={isConnectable}
           style={{ background: "red", transform: "translateY(-60%), translateX(60%)" }}
         />
-        {data?.label || "Node (Null)"}
+        <MathJax>{`\\(${data?.label || "Node (Null)"}\\)`}</MathJax>
+
         <Handle
           type="source"
           position={Position.Bottom}

@@ -61,7 +61,7 @@ class SignalFlowGraphSolver:
                 self.__loops.add(Path(simple_cycle_nodes, edge_path))
 
     def __get_all_non_touching_loops(self) -> None:
-        for k in range(2, len(self.__forward_paths) + 1):
+        for k in range(2, len(self.__loops) + 1):
             self.__get_all_k_non_touching_loops(k)
 
     def __get_all_k_non_touching_loops(self, k: int) -> None:

@@ -9,7 +9,7 @@ function RouthForm() {
     const submitRouth = async (e) => {
         e.preventDefault();
         let data = { polynomial: polynomial };
-        const response = await fetch("http://127.0.0.1:5000/", {
+        const response = await fetch("http://127.0.0.1:5000/routh", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
