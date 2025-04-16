@@ -17,17 +17,17 @@ export default function TabsVertical() {
       <Tabs
         aria-label="Vertical tabs"
         orientation="vertical"
-        sx={{ minWidth: 300, height: '100vh', color: '#f6c177', padding: '0px' }}
+        sx={{ minWidth: 300, height: '100vh', padding: '0px' }}
         value={value}
         onChange={(event, newValue) => setValue(newValue)}
       >
-        <TabList sx={{ backgroundColor: "#1f1d2e" }}>
-          <Tab sx={{ padding: '15px', color: "#f6c177", fontFamily: "'IBM Plex Mono', monospace", 
-                    '&.Mui-selected': { color: '#f6c177', backgroundColor: '#191724' } }}>
+        <TabList sx={{ backgroundColor: '#2a273f' }}>
+          <Tab sx={{ padding: '15px', color: "#ffffff", fontFamily: "'IBM Plex Mono', monospace" , backgroundColor: '#2a273f', 
+                    '&.Mui-selected': { color: '#f6c177' , backgroundColor:"#191724"} }}>
                     Signal Flow Representation
           </Tab>
-          <Tab sx={{ padding: '15px', color: "#f6c177", fontFamily: "'IBM Plex Mono', monospace", 
-                    '&.Mui-selected': { color: '#f6c177', backgroundColor: '#191724' } }}>
+          <Tab sx={{ padding: '15px', color: "#ffffff", fontFamily: "'IBM Plex Mono', monospace" , backgroundColor: '#2a273f', 
+                    '&.Mui-selected': { color: '#f6c177', background:"#191724"} }}>
                     Routh Stability Criterion
           </Tab>
         </TabList>

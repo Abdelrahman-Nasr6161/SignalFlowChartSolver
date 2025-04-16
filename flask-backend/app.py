@@ -33,6 +33,7 @@ def solve_routh():
     polynomial = request.json['polynomial'].replace(" ", "")
     stable, sign_changes, routh, aux_poly_num = routh_stability_analysis(polynomial)
     positive_real, negative_real, zero_real = solve_polynomial(polynomial)
+    routh = [[round(value, 2) for value in row] for row in routh]
     Jw_axis_coeffs = aux_poly_num
     RHS_coeffs = sign_changes
     LHS_coeffs = len(routh) - Jw_axis_coeffs - RHS_coeffs - 1
@@ -44,12 +45,12 @@ def solve_routh():
         {
         'LHS_roots': negative_real,
         'RHS_roots': positive_real,
-        'zero_roots': zero_real,
+        'Jw_axis_roots': zero_real,
         'stable': stable,
         'RHS_roots_num': RHS_coeffs,
         'LHS_roots_num': LHS_coeffs,
         'Jw_axis_roots_num': Jw_axis_coeffs,
-        'routh': routh.tolist()
+        'routh': routh
      }
     )
 

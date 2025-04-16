@@ -1,7 +1,6 @@
 import numpy as np
 import sympy as sp
 import sympy.parsing.sympy_parser as smp
-
 def solve_polynomial(polynomial):
     s = sp.Symbol('s')
     poly_expr = sp.sympify(polynomial.replace('^', '**'))
@@ -25,7 +24,7 @@ def solve_polynomial(polynomial):
             negative_real.append(root_str)
         else:
             # Force real part to zero for display
-            root_str = f"0{'+' if imag >= 0 else ''}{imag}j" if imag != 0 else "0"
+            root_str = f"{imag}j" if imag != 0 else ""
             zero_real.append(root_str)
 
     return positive_real, negative_real, zero_real
@@ -81,8 +80,8 @@ def routh_array(coeffs):
             derived_coeffs = derived_coeffs[np.abs(derived_coeffs) != 0.0]
             while len(derived_coeffs) < cols:
                 derived_coeffs = np.append(derived_coeffs, 0)
-            print(derived_coeffs)
-            print(routh[i - 1])
+            print(f"Derived coefficients: {derived_coeffs}")
+            print(f"Row {i} coefficients: {routh[i-1]}")
             routh[i - 1] = derived_coeffs
 
         for j in range(cols - 1):
